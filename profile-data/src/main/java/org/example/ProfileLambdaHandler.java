@@ -12,18 +12,17 @@ import java.util.List;
  * AWS Lambda handler for processing profile data and storing it in an RDS database.
  * This class implements the RequestHandler interface to handle Lambda function requests.
  */
-public class ProfileLambdaHandler implements RequestHandler<List<ProfileData>, String> {
+public class ProfileLambdaHandler implements RequestHandler<ProfileData, String> {
 
     /**
      * Handles the Lambda function request.
      *
-     * @param profileDataList List of ProfileData objects to be processed.
-     * @param context         AWS Lambda context object.
+     * @param profileData ProfileData objects to be processed.
+     * @param context     AWS Lambda context object.
      * @return A string indicating the result of the operation.
      */
     @Override
-    public String handleRequest(List<ProfileData> profileDataList, Context context) {
-        for (ProfileData profileData : profileDataList) {
+    public String handleRequest(ProfileData profileData, Context context) {
             try {
                 // Validate input
                 if (profileData.getEmail() == null || profileData.getEmail().isEmpty()) {
@@ -49,8 +48,6 @@ public class ProfileLambdaHandler implements RequestHandler<List<ProfileData>, S
                 context.getLogger().log("Error: " + e.getMessage());
                 return "Failed to process profile data.";
             }
-        }
-        return "No profile data to process.";
     }
 
     /**

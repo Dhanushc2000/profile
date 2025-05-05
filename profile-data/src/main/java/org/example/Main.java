@@ -20,13 +20,13 @@ public class Main {
         profileData.setEmail("test@example.com");
         profileData.setPhone("123-456-7890");
         profileData.setAddress("123 Main St");
-        profileData.setVehicleId("ABC123");
+        profileData.setVehicleId("BH123456");
 
         // Create a mock Context (you can use a library or a simple implementation)
         Context context = new MockContext();
 
         // Call the handleRequest method
-        String result = handler.handleRequest(Collections.singletonList(profileData), context);
+        String result = handler.handleRequest(profileData, context);
 
         // Print the result
         System.out.println("Result: " + result);
