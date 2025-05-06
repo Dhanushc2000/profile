@@ -1,34 +1,46 @@
 package org.example.service;
 
-
 import org.example.exception.ProfileDataException;
 import org.example.model.ProfileData;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
-import java.sql.DriverManager;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mockStatic;
 
 public class ProfileServiceTest {
 
     @Test
-    public void testStoreProfileData_Exception() {
+    public void testStoreProfileData_ConfigFileNotFound() {
         // Arrange
+
         ProfileData profileData = new ProfileData();
-        profileData.setEmail("test@example.com");
-        profileData.setPhone("1234567890");
-        profileData.setAddress("123 Test Street");
-        profileData.setVehicleId("V12345");
+        deleteConfigFile();
 
-        try (MockedStatic<DriverManager> mockedDriverManager = mockStatic(DriverManager.class)) {
-            mockedDriverManager.when(() -> DriverManager.getConnection(anyString(), anyString(), anyString()))
-                    .thenThrow(new RuntimeException("Database connection error"));
+        ProfileService profileService = new ProfileService();
 
-            // Act & Assert
-            assertThrows(ProfileDataException.class, () -> ProfileService.storeProfileData(profileData));
+        // Act & Assert
+        ProfileDataException exception = assertThrows(ProfileDataException.class, () -> {
+            profileService.storeProfileData(profileData);
+        });
+        assertEquals("Configuration file not found: src\\main\\resources\\config.properties (The system cannot find the file specified)", exception.getMessage());
+    }
+
+    @Test
+    public void testStoreLinkedSystem_ConfigFileNotFound() {
+        // Arrange
+        deleteConfigFile();
+
+        // Act & Assert
+        ProfileDataException exception = assertThrows(ProfileDataException.class, () -> {
+            ProfileService.storeLinkedSystemData("V12345");
+        });
+        assertEquals("Configuration file not found: src\\main\\resources\\config.properties (The system cannot find the file specified)", exception.getMessage());
+    }
+
+    private void deleteConfigFile() {
+        java.io.File file = new java.io.File("src/main/resources/config.properties");
+        if (file.exists()) {
+            file.delete();
         }
     }
 }

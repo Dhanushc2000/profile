@@ -12,7 +12,6 @@ import org.example.service.ProfileService;
  */
 public class ProfileLambdaHandler implements RequestHandler<ProfileData, String> {
 
-    private final ProfileService profileService = new ProfileService();
     /**
      * Handles the Lambda function request.
      *
@@ -41,12 +40,12 @@ public class ProfileLambdaHandler implements RequestHandler<ProfileData, String>
             // Storing the vehicle data in linked_system table in RDS
             LinkedSystem linkedSystem = new LinkedSystem();
             linkedSystem.setVehicleId(profileData.getVehicleId());
-            profileService.storeLinkedSystemData(linkedSystem.getVehicleId());
+            ProfileService.storeLinkedSystemData(linkedSystem.getVehicleId());
             context.getLogger().log("LinkedSystem data stored successfully for vehicle ID: " + linkedSystem.getVehicleId());
 
             return "Profile and LinkedSystem data stored successfully.";
         } catch (Exception e) {
-            context.getLogger().log("Error: " + e.getMessage());
+            context.getLogger().log("Error processing profile data: " + e.getMessage());
             return "Failed to process profile data.";
         }
     }
