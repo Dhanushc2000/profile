@@ -29,6 +29,10 @@ The project uses the following dependencies:
 
 Dependencies are managed in the `pom.xml` file.
 
+## Code Coverage
+![Alt text](img.png)
+
+
 ## Build and Deployment
 
 1. **Build the project**:
